@@ -257,13 +257,20 @@
       (function (lambda()
 		  (setq indent-tabs-mode nil)
 		  (setq c-indent-level 4))))
+(add-hook 'java-mode-hook
+	  '(lambda () "Treat Java @-style annotiation as comments."
+	     (setq c-comment-start-regexp "\\(@\\|/\\(/\\|[*][*]?\\)\\)")
+	     (modify-syntax-entry ?@ "< b" java-mode-syntax-table)))
+
 ;;; c++
 (setq c++-mode-hook
       (function (lambda()
 		  (setq indent-tabs-mode nil)
 		  (setq c-indent-level 4))))
+
 ;;; =============================================================== ;;;
 ;;; VI-LIKE
+;;; =============================================================== ;;;
 ;; moving between matching braces with %
 ;; just like vim could do
 (global-set-key "%" 'match-paren)
@@ -284,3 +291,8 @@
 ;; cscope has to be here. Otherwise, key binding for c++ file is not
 ;; working.
 (require 'xcscope)
+
+;;; =============================================================== ;;;
+;;; Version control tools
+;;; =============================================================== ;;;
+(require 'egg)
