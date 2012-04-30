@@ -1,7 +1,7 @@
 ;; ============================================================== ;;;
 ;; Author: Adam Jiang
 ;; Reversion: 2.0
-;; Update: 2011/06/18
+;; Update: 2012/05/01
 ;; ============================================================== ;;;
 
 ;;; split the previous version to several parts; do NOT use byte
@@ -60,6 +60,7 @@
 
 ;;; ============================================================ ;;;
 ;;; GUI FONTS
+;;; ============================================================ ;;;
 (defun set-gui-fonts ()
   (interactive)
   (if window-system
@@ -91,6 +92,7 @@
 
 ;;; ============================================================ ;;;
 ;;; COLOR
+;;;;============================================================ ;;;;
 (defun set-color-theme ()
   (interactive)
   (if window-system
@@ -108,6 +110,7 @@
 
 ;;;;=========================================================;;;;
 ;;; FRAMESIZE
+;;;;=========================================================;;;;
 (defun set-frame-size-according-to-resolution ()
   (interactive)
   (if window-system
@@ -128,8 +131,9 @@
 
 (set-frame-size-according-to-resolution)
 
-;;;============================================================;;;
+;;;============================================================= ;;;
 ;;; BACKUPS
+;;; ============================================================ ;;;
 ;;; Enanble backup files.
 (setq make-backup-files t)
 ;;; Enable versioning with default values (keep five last versions)
@@ -148,6 +152,7 @@
 
 ;;; =========================================================== ;;;
 ;;; AUTOFILL AND TEXT
+;;; ============================================================ ;;;
 ;;; Auto return at 72 charactors
 (setq-default fill-column 72)
 ;; ----- Turn on Auto Fill mode automatically in all modes -----
@@ -162,12 +167,21 @@
 (setq default-major-mode 'text-mode)
 
 ;;; ============================================================ ;;;
+;;; BUFFERS
+;;; ============================================================ ;;;
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'post-forward
+      uniquify-separator ":")
+
+;;; ============================================================ ;;;
 ;;; W3M BROWSER
+;;; ============================================================ ;;;
 (require 'w3m)
 (require 'w3m-dka-keymap)
 
 ;;; ============================================================ ;;;
 ;;; EXTERNAL TOOLS
+;;; ============================================================ ;;;
 ; Opening other kinds of files
 ; http://www.emacswiki.org/cgi-bin/wiki/TrivialMode
 ; by Cyprian Laskowski
