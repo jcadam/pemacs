@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 if [ -a ${HOME}/.emacs ]; then
 	mv ${HOME}/.emacs ${HOME}/_emacs
 	mv ${HOME}/.emacs.d ${HOME}/_emacs.d
