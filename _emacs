@@ -1,38 +1,79 @@
-;; ============================================================== ;;;
-;; Author: Adam Jiang
-;; Reversion: 2.0
-;; Update: 2012/05/01
-;; ============================================================== ;;;
+;;; ======================================================================= ;;;
+;;; Author: Adam Jiang
+;;; Reversion: 2.0
+;;; Update: 2012/10/02
+;;; ======================================================================= ;;;
 
 ;;; split the previous version to several parts; do NOT use byte
 ;;; compile anymore; all extra libraries except those with distro
 ;;; binaries will be put into ${HOME}/.emacs.d/site-lisp/
 ;;; Use this file on Ubuntu 11.04 with following package installed
-;;; emacs cscope quilt w3m
+;;; emacs cscope w3m
 
-;;; ============================================================= ;;;
+;;; ======================================================================= ;;;
 ;;; EXECUTABLE PATH
-;;; ============================================================= ;;;
+;;; ======================================================================= ;;;
 ;;; have a private script directory for emacs only; all utilities will
 ;;; be put into ~/.emacs.d/scripts
 (setenv "PATH" (concat (getenv "PATH") ":~/.emacs.d/scripts"))
 (setq exec-path (append exec-path '("~/.emacs.d/scripts")))
 
-;;; ============================================================= ;;;
+;;; ======================================================================= ;;;
 ;;; LOADPATH
+;;; ======================================================================= ;;;
 (let ((default-directory "~/.emacs.d/site-lisp/"))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
-;;;============================================================;;;
+;;; ======================================================================= ;;;
 ;;; USER INFO
-;;;============================================================;;;
+;;; ======================================================================= ;;;
 (setq user-full-name "Adam Jiang")
 (setq user-mail-address "jiang.adam@gmail.com")
 
-;;;============================================================;;;
+;;; ======================================================================= ;;;
+;;; PACKAGE REPOSITORY
+;;; ======================================================================= ;;;
+(require 'package)
+(add-to-list 'package-archives
+	     '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
+;;; ======================================================================= ;;;
+;;; PACKAGES
+;;; ======================================================================= ;;;
+;;; shameless stolen from prelude
+;;; https://github.com/bbatsov/prelude/
+
+;; required because of a package.el bug
+(setq url-http-attempt-keepalives nil)
+
+(defvar prelude-packages
+  '(ack-and-a-half go-mode pony-mode)
+  "A list of packages to ensure are installed at launch.")
+
+(require 'cl)
+(defun prelude-packages-installed-p ()
+  (loop for p in prelude-packages
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+
+(defun prelude-install-packages ()
+  (unless (prelude-packages-installed-p)
+    ;; check for new packages (package versions)
+    (message "%s" "Emacs Prelude is now refreshing its package database...")
+    (package-refresh-contents)
+    (message "%s" " done.")
+    ;; install the missing packages
+    (dolist (p prelude-packages)
+      (unless (package-installed-p p)
+        (package-install p)))))
+
+(prelude-install-packages)
+
+;;; ======================================================================= ;;;
 ;;; MISC SETTINGS
-;;;============================================================;;;
+;;; ======================================================================= ;;;
 (defun mis-setting ()
   (interactive)
   ;;; No startup message
@@ -58,16 +99,15 @@
   (fset 'yes-or-no-p 'y-or-n-p))
 (mis-setting)
 
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; GUI FONTS
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 (defun set-gui-fonts ()
   (interactive)
   (if window-system
     (progn
-      ;; Set default fonts to Monospace 10pt
-      ;; (set-default-font "Inconsolata-10")
-      (set-default-font "DejaVu Sans Mono-10")
+      ;; Set default fonts to ProFont 8pt
+      (set-default-font "profont-8")
       ;;; JP fonts
       (set-fontset-font (frame-parameter nil 'font)
                         'japanese-jisx0208
@@ -80,37 +120,31 @@
       (set-fontset-font (frame-parameter nil 'font)
                         'cjk-misc
                         '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
-      ;;; bopomofo fonts
-      (set-fontset-font (frame-parameter nil 'font)
-                        'bopomofo
-                        '("WenQuanYi Micro Hei Mono" . "unicode-bmp"))
-      ;;; symbol fonts
-      (set-fontset-font (frame-parameter nil 'font)
-                        'symbol
-                        '("WenQuanYi Micro Hei Mono". "unicode-bmp")))))
+      )))
 (set-gui-fonts)
 
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; COLOR
-;;;;============================================================ ;;;;
+;;; ======================================================================= ;;;
 (defun set-color-theme ()
   (interactive)
   (if window-system
       (progn
-	;;
-	(add-to-list 'load-path "~/.emacs.d/color-theme/")
-	(add-to-list 'load-path "~/.emacs.d/color-theme/themes")
 	(require 'color-theme)
 	(eval-after-load "color-theme"
 	  '(progn
 	     (color-theme-initialize)
-	     (color-theme-bharadwaj))))))
+	     ;; dark theme
+	     (color-theme-fischmeister)
+	     ;; light theme
+	     ;; (color-theme-jsc-light)
+	     )))))
 
 (set-color-theme)
 
-;;;;=========================================================;;;;
+;;; ======================================================================= ;;;
 ;;; FRAMESIZE
-;;;;=========================================================;;;;
+;;; ======================================================================= ;;;
 (defun set-frame-size-according-to-resolution ()
   (interactive)
   (if window-system
@@ -131,9 +165,9 @@
 
 (set-frame-size-according-to-resolution)
 
-;;;============================================================= ;;;
+;;; ======================================================================= ;;;
 ;;; BACKUPS
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; Enanble backup files.
 (setq make-backup-files t)
 ;;; Enable versioning with default values (keep five last versions)
@@ -142,20 +176,22 @@
 (setq backup-directory-alist
       (quote ((".*" . "~/.emacs_backups/"))))
 
-;;; =========================================================== ;;;
+;;; ======================================================================= ;;;
 ;;; MODE LINE
+;;; ======================================================================= ;;;
 ;;; Enable Line and Column Numbering
 ;;; Show line-number in the mode line
 (line-number-mode 1)
 ;;; Show column-number in the mode line
 (column-number-mode 1)
 
-;;; =========================================================== ;;;
+;;; ======================================================================= ;;;
 ;;; AUTOFILL AND TEXT
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; Auto return at 72 charactors
 (setq-default fill-column 72)
-;; ----- Turn on Auto Fill mode automatically in all modes -----
+;; Turn on Auto Fill mode automatically in all modes
+;;
 ;; Auto-fill-mode the the automatic wrapping of lines and insertion of
 ;; newlines when the cursor goes over the column limit.
 ;;
@@ -163,25 +199,25 @@
 ;; modes. The other way to do this is to turn on the fill for specific
 ;; modes via hooks.
 (setq auto-fill-mode 1)
-;; ----- Make Text mode the default mode for new buffers -----
+;; Text mode the default mode for new buffers
 (setq default-major-mode 'text-mode)
 
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; BUFFERS
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward
       uniquify-separator ":")
 
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; W3M BROWSER
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 (require 'w3m)
 (require 'w3m-dka-keymap)
 
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; EXTERNAL TOOLS
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ; Opening other kinds of files
 ; http://www.emacswiki.org/cgi-bin/wiki/TrivialMode
 ; by Cyprian Laskowski
@@ -209,8 +245,9 @@
 (define-trivial-mode "oocalc" "\\.xls.*$")
 (define-trivial-mode "oowriter" "\\.doc.*$")
 
-;;; ============================================================ ;;;
+;;; ======================================================================= ;;;
 ;;; PROGRAMMING
+;;; ======================================================================= ;;;
 ;; don't blink on parents
 (setq blink-matching-parent nil)
 ;; jump between parents with %
@@ -233,6 +270,7 @@
 	  '(lambda() (local-set-key
 		      "\C-c\C-c" 'program-save-and-compile)))
 
+;;; WHITESPACES
 ;; show whitespace/tabs
 (require 'whitespace)
 (global-set-key "\C-c_w" 'whitespace-mode)
@@ -254,37 +292,53 @@
 ))
 ;; let tab and trailing whitespace be visiable
 ;; show tab as tab-mark
-(setq whitespace-style '(trailing tabs tab-mark newline-mark))
+;;(setq whitespace-style '(trailing tabs tab-mark newline-mark))
+(setq whitespace-style '(trailing tabs tab-mark))
 
 ;;; LINE NUMBER
 ;;; Show linumb always
 (add-hook 'c-mode-common-hook (lambda () (linum-mode t)))
 (add-hook 'java-mode-common-hook (lambda () (linum-mode t)))
 (add-hook 'python-mode-common-hook (lambda () (linum-mode t)))
-;;; indent with space only in C++ and Java mode
+
+;;; STYLES
 ;;; c
 (setq c-mode-hook
       (function (lambda()
 		  '(c-set-style linux))))
+
+;;; indent with space only in C++ and Java mode
 ;;; java
 (setq java-mode-hook
       (function (lambda()
 		  (setq indent-tabs-mode nil)
 		  (setq c-indent-level 4))))
-(add-hook 'java-mode-hook
-	  '(lambda () "Treat Java @-style annotiation as comments."
-	     (setq c-comment-start-regexp "\\(@\\|/\\(/\\|[*][*]?\\)\\)")
-	     (modify-syntax-entry ?@ "< b" java-mode-syntax-table)))
-
 ;;; c++
 (setq c++-mode-hook
       (function (lambda()
 		  (setq indent-tabs-mode nil)
 		  (setq c-indent-level 4))))
 
-;;; =============================================================== ;;;
+;;; java specials
+;;; treat @-style annotation as comments
+(add-hook 'java-mode-hook
+	  '(lambda () "Treat Java @-style annotiation as comments."
+	     (setq c-comment-start-regexp "\\(@\\|/\\(/\\|[*][*]?\\)\\)")
+	     (modify-syntax-entry ?@ "< b" java-mode-syntax-table)))
+
+;;; AUTO-COMPLETE
+(require 'auto-complete)
+(global-auto-complete-mode  t)
+(define-key ac-complete-mode-map "\C-n" 'ac-next)
+(define-key ac-complete-mode-map "\C-p" 'ac-previous)
+(define-key ac-complete-mode-map "\t"   'ac-expand)
+(define-key ac-complete-mode-map "\r"   'ac-complete)
+(define-key ac-complete-mode-map " "    'ac-complete)
+(define-key ac-complete-mode-map "\M-/" 'ac-stop)
+
+;;; ======================================================================= ;;;
 ;;; VI-LIKE
-;;; =============================================================== ;;;
+;;; ======================================================================= ;;;
 ;; moving between matching braces with %
 ;; just like vim could do
 (global-set-key "%" 'match-paren)
@@ -306,7 +360,28 @@
 ;; working.
 (require 'xcscope)
 
-;;; =============================================================== ;;;
-;;; Version control tools
-;;; =============================================================== ;;;
+;;; ======================================================================= ;;;
+;;; VERSION CONTROL TOOLS
+;;; ======================================================================= ;;;
 (require 'egg)
+
+;;; ======================================================================= ;;;
+;;; PYTHON PLUGINS COLLECTION
+;;; ======================================================================= ;;;
+(require 'epy-setup)
+;; python facilities
+(require 'epy-python)
+;; autocompletion
+(require 'epy-completion)
+;; editing
+(add-hook 'python-mode
+	  '(lambda () "Enabbling python-editing tools only for python mode."
+	     (require 'epy-editing)
+	     ;; nose enabling
+	     ;; nose is an easy python test running in Emacs
+	     (require 'epy-nose)))
+
+;;; ======================================================================= ;;;
+;;; DJANGO
+;;; ======================================================================= ;;;
+(require 'pony-mode)
