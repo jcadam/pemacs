@@ -107,7 +107,7 @@
   (if window-system
     (progn
       ;; Set default fonts to ProFont 8pt
-      (set-default-font "profont-8")
+      (set-default-font "profont-9")
       ;;; JP fonts
       (set-fontset-font (frame-parameter nil 'font)
                         'japanese-jisx0208
@@ -299,7 +299,7 @@
 ;;; Show linumb always
 (add-hook 'c-mode-common-hook (lambda () (linum-mode t)))
 (add-hook 'java-mode-common-hook (lambda () (linum-mode t)))
-(add-hook 'python-mode-common-hook (lambda () (linum-mode t)))
+(add-hook 'python-mode--hook (lambda () (linum-mode t)))
 
 ;;; STYLES
 ;;; c
@@ -334,7 +334,8 @@
 (define-key ac-complete-mode-map "\t"   'ac-expand)
 (define-key ac-complete-mode-map "\r"   'ac-complete)
 (define-key ac-complete-mode-map " "    'ac-complete)
-(define-key ac-complete-mode-map "\M-/" 'ac-stop)
+(define-key ac-complete-mode-map "\M-/" 'ac-expand)
+(define-key ac-complete-mode-map "\M-\\"'ac-stop)
 
 ;;; ======================================================================= ;;;
 ;;; VI-LIKE
