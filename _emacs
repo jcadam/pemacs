@@ -208,6 +208,8 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward
       uniquify-separator ":")
+;;; override the default keybinding for buffer switching
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;;; ======================================================================= ;;;
 ;;; W3M BROWSER
@@ -296,16 +298,17 @@
 (setq whitespace-style '(trailing tabs tab-mark))
 
 ;;; LINE NUMBER
-;;; Show linumb always
+;;; show line numbers in these major modes
 (add-hook 'c-mode-common-hook (lambda () (linum-mode t)))
 (add-hook 'java-mode-common-hook (lambda () (linum-mode t)))
-(add-hook 'python-mode--hook (lambda () (linum-mode t)))
+(add-hook 'python-mode-hook (lambda () (linum-mode t)))
 
 ;;; STYLES
 ;;; c
-(setq c-mode-hook
-      (function (lambda()
-		  '(c-set-style linux))))
+(defun my-c-mode-hook ()
+  (c-set-style "linux"))
+(add-hook 'c-mode-hook '(lambda () "Set linux style for a c files"
+			  (c-set-style "linux")))
 
 ;;; indent with space only in C++ and Java mode
 ;;; java
