@@ -250,6 +250,7 @@
 ;;; ======================================================================= ;;;
 ;;; PROGRAMMING
 ;;; ======================================================================= ;;;
+;;; MISCS
 ;; don't blink on parents
 (setq blink-matching-parent nil)
 ;; jump between parents with %
@@ -260,17 +261,6 @@
             ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
             (t (self-insert-command (or arg 1)))))
 (global-set-key "%" 'match-paren)
-;; bind M-n to jump to next error
-(add-hook 'c-mode-hook
-	  '(lambda() (local-set-key "\M-n" 'next-error)))
-;; add a function to save-and-compile
-(defun program-save-and-compile ()
-  (interactive "")
-  (save-buffer 0)
-  (compile "make -k"))
-(add-hook 'c-mode-hook
-	  '(lambda() (local-set-key
-		      "\C-c\C-c" 'program-save-and-compile)))
 
 ;;; WHITESPACES
 ;; show whitespace/tabs
@@ -304,11 +294,66 @@
 (add-hook 'python-mode-hook (lambda () (linum-mode t)))
 
 ;;; STYLES
+(require 'guess-style)
+(global-guess-style-info-mode 1)
+
+;;; SmartTabs : To use tabs for indentation and spaces for alignment
+;;; check out https://github.com/jcsalomon/smarttabs for latest version
+(require 'smart-tabs-mode)
+;; enable smart tabs in c files
+(add-hook 'c-mode-hook 'smart-tabs-mode-enable)
+(smart-tabs-advice c-indent-line c-basic-offset)
+(smart-tabs-advice c-indent-region c-basic-offset)
+
 ;;; c
-(defun my-c-mode-hook ()
-  (c-set-style "linux"))
-(add-hook 'c-mode-hook '(lambda () "Set linux style for a c files"
-			  (c-set-style "linux")))
+;; additional styles
+(c-add-style "microsoft"
+	     '("stroustrup"
+	       (c-offsets-alist
+		(innamespace . -)
+		(inline-open . 0)
+		(inher-cont . c-lineup-multi-inher)
+		(arglist-cont-nonempty . +)
+		(template-args-cont . +))))
+
+(c-add-style "adam"
+	     '("ellemtel"
+	       (c-basic-offset . 4)
+	       (c-indent-level . 4)
+	       (indent-tabs-mode . nil)
+	       (c-offsets-alist
+		(substatement-open . 0) ; brackets should be at the same
+					; indentation level as the
+					; statements they open
+		(inline-open . +)
+		(block-open . +)
+		(brace-list-open . +)   ; all "opens" should be indented
+					; by the c-indent-level
+		(case-label . +))       ; indent case labels by
+					; c-indent-level, too
+	       ))
+
+;; call c-set-style based on pattern of the name of current buffer. If
+;; it contains any keywords like [linux, kernel], then set the style to
+;; "linux". Otherwise, attach to the original style of the code
+(defvar c-style-pattern-alist '(("linux" . "linux\\|kernel"))
+  "Association list of pairs (STYLE . PATTERN) where STYLE is the
+C style to be used in buffers whose file name matches the regular
+expression PATTERN.")
+
+(defvar c-style-default "adam"
+  "Default C style for buffers whose file names do not match any
+of the patterns in c-style-pattern-alist.")
+
+(defun c-set-style-for-file-name ()
+  "Set the C style based on the file name of the current buffer."
+  (c-set-style
+   (loop with file-name = (buffer-file-name)
+	 for (style . pattern) in c-style-pattern-alist
+	 when (string-match pattern file-name) return style
+	 finally return c-style-default)))
+
+(add-hook 'c-mode-hook #'c-set-style-for-file-name)
 
 ;;; indent with space only in C++ and Java mode
 ;;; java
@@ -319,8 +364,7 @@
 ;;; c++
 (setq c++-mode-hook
       (function (lambda()
-		  (setq indent-tabs-mode nil)
-		  (setq c-indent-level 4))))
+		  (c-set-style "adam"))))
 
 ;;; java specials
 ;;; treat @-style annotation as comments
@@ -340,6 +384,22 @@
 (define-key ac-complete-mode-map "\M-/" 'ac-expand)
 (define-key ac-complete-mode-map "\M-\\"'ac-stop)
 
+;; bind M-n to jump to next error
+(add-hook 'c-mode-hook
+	  '(lambda() (local-set-key "\M-n" 'next-error)))
+
+;;; ======================================================================= ;;;
+;;; C LANGUAGE
+;;; ======================================================================= ;;;
+;; add a function to save-and-compile
+(defun program-save-and-compile ()
+  (interactive "")
+  (save-buffer 0)
+  (compile "make -k"))
+
+(add-hook 'c-mode-hook
+	  '(lambda() (local-set-key "\C-c\C-c" 'program-save-and-compile)))
+
 ;;; ======================================================================= ;;;
 ;;; VI-LIKE
 ;;; ======================================================================= ;;;
@@ -354,12 +414,9 @@
 	((looking-at "\\s\)") (forward-char 1) (backward-list 1))
 	(t (self-insert-command (or arg 1)))))
 
-(custom-set-variables
- ;; replace the default indexer with smart-indexer; this script will be
- ;; placed into .emacs.d/scripts folder
- '(cscope-indexing-script "smart-cscope-indexer"))
-(custom-set-faces)
-
+;;; ======================================================================= ;;;
+;;; INDEXER
+;;; ======================================================================= ;;;
 ;; cscope has to be here. Otherwise, key binding for c++ file is not
 ;; working.
 (require 'xcscope)
