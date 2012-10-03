@@ -13,6 +13,7 @@ function gentoo_install() {
     sudo USE="emacs" emerge cscope git
     sudo emerge profont-x11
     sudo emerge w3m
+    sudo USE="bash-completion" emerge sys-apps/ack
 }
 
 gentoo_install
