@@ -1,3 +1,0 @@
-clone with --recursive option like
-
-$ git clone --recursive git@github.com:jcadam/pemacs.git
