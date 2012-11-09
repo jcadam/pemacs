@@ -1,0 +1,5 @@
+# name : signature
+# expand-env: ((yas/indent-line 'fixed) (yas/wrap-around-region 'nil))
+# --
+Best regards,
+/Adam
