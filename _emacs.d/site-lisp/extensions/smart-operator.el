@@ -64,6 +64,8 @@
     (define-key keymap "," 'smart-operator-\,)
     (define-key keymap "~" 'smart-operator-~)
     (define-key keymap "." 'smart-operator-.)
+    ;; remove trailing spaces before newline
+    (define-key keymap "\r" 'smart-operator-newline)
     keymap)
   "Keymap used my `smart-operator-mode'.")
 
@@ -90,7 +92,7 @@
   (smart-operator-insert (string last-command-event)))
 
 (defvar smart-operator-list
-  '("=" "<" ">" "%" "+" "-" "*" "/" "&" "|" "^" "!" ":" "?" "," "."))
+  '("=" "<" ">" "%" "+" "-" "*" "/" "&" "|" "^" "!" ":" "?" "," "." "\\r"))
 
 (defun smart-operator-insert (op &optional only-where newline-&-indent)
   "See `smart-operator-insert-1'."
@@ -399,6 +401,22 @@ so let's not get too insert-happy."
          (insert "="))
         (t
          (smart-operator-insert "="))))
+
+(defun smart-operator-newline ()
+  "See `smart-operator-insert'."
+  (interactive)
+  ;; Remove trailing whitespace added previously in the case of
+  ;; foo(*bar1,SPC
+  ;;     *bar2)
+  (cond ((and c-buffer-is-cc-mode (looking-back ", *"))
+	 (when (looking-back ",\\sc*")
+	   (save-excursion
+	     (backward-char 1)
+	     (delete-horizontal-space)))
+	 (smart-operator-insert "\n" 'middle)
+	 (indent-according-to-mode))
+	(t
+	 (smart-operator-insert "\n" 'middle))))
 
 (provide 'smart-operator)
 
