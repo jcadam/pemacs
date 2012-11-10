@@ -252,7 +252,8 @@ so let's not get too insert-happy."
 (defun smart-operator-* ()
   "See `smart-operator-insert'."
   (interactive)
-  (cond (c-buffer-is-cc-mode
+  (cond ((and c-buffer-is-cc-mode
+	      (not (smart-operator-document-line?)))
          ;; ,----
          ;; | a * b;
          ;; | char *a;
@@ -360,6 +361,16 @@ so let's not get too insert-happy."
                 (move-beginning-of-line nil)
                 (looking-at "#!")))
          (insert "/"))
+	;; case /* hello */
+	;; insert SPC before */ instread of SPC between * and /
+	((and c-buffer-is-cc-mode
+	      (smart-operator-document-line?))
+	 (when (looking-back "[^\sc]+\\*")
+	   (save-excursion
+	     (backward-char 1)
+	     (insert " "))
+	   (smart-operator-insert "/" 'middle)
+	   (indent-according-to-mode)))
         (t
          (smart-operator-insert "/"))))
 
