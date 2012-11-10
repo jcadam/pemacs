@@ -308,6 +308,10 @@ so let's not get too insert-happy."
              (delete-horizontal-space)))
          (smart-operator-insert "-" 'middle)
          (indent-according-to-mode))
+   ((and c-buffer-is-cc-mode (looking-back "[*/%+(><=&^|,] *"))
+    (smart-operator-insert "-" 'before))
+   ((and c-buffer-is-cc-mode (looking-back "\\(return\\) *"))
+    (smart-operator-insert "-" 'before))
         (t
          (smart-operator-insert "-"))))
 
