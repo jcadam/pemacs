@@ -57,6 +57,7 @@
     (define-key keymap "/" 'smart-operator-/)
     (define-key keymap "&" 'smart-operator-&)
     (define-key keymap "|" 'smart-operator-self-insert-command)
+    (define-key keymap "^" 'smart-operator-self-insert-command)
     ;; (define-key keymap "!" 'smart-operator-self-insert-command)
     (define-key keymap ":" 'smart-operator-:)
     (define-key keymap "?" 'smart-operator-?)
@@ -89,7 +90,7 @@
   (smart-operator-insert (string last-command-event)))
 
 (defvar smart-operator-list
-  '("=" "<" ">" "%" "+" "-" "*" "/" "&" "|" "!" ":" "?" "," "."))
+  '("=" "<" ">" "%" "+" "-" "*" "/" "&" "|" "^" "!" ":" "?" "," "."))
 
 (defun smart-operator-insert (op &optional only-where newline-&-indent)
   "See `smart-operator-insert-1'."
