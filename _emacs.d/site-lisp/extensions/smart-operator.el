@@ -65,7 +65,7 @@
     (define-key keymap "~" 'smart-operator-~)
     (define-key keymap "." 'smart-operator-.)
     ;; remove trailing spaces before newline
-    (define-key keymap "\r" 'smart-operator-newline)
+    (define-key keymap [return] 'smart-operator-newline)
     keymap)
   "Keymap used my `smart-operator-mode'.")
 
@@ -92,7 +92,7 @@
   (smart-operator-insert (string last-command-event)))
 
 (defvar smart-operator-list
-  '("=" "<" ">" "%" "+" "-" "*" "/" "&" "|" "^" "!" ":" "?" "," "." "\\r"))
+  '("=" "<" ">" "%" "+" "-" "*" "/" "&" "|" "^" "!" ":" "?" "," "."))
 
 (defun smart-operator-insert (op &optional only-where newline-&-indent)
   "See `smart-operator-insert-1'."
