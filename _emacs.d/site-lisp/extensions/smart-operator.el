@@ -245,6 +245,8 @@ so let's not get too insert-happy."
                 (smart-operator-insert "&" 'after))
                ((looking-back "= *")
                 (smart-operator-insert "&" 'before))
+	       ((looking-back ", *")
+		(smart-operator-insert "&" 'before))
                (t
                 (smart-operator-insert "&"))))
         (t
@@ -267,9 +269,17 @@ so let's not get too insert-happy."
                 (smart-operator-insert "*" 'before))
                ((looking-back "\\* *")
                 (smart-operator-insert "*" 'middle))
-               ((looking-back "^[ (]*")
+	       ;; case foo(
+	       ;;          *bar);
+               ((looking-back "^[\\sc]*")
                 (smart-operator-insert "*" 'middle)
                 (indent-according-to-mode))
+	       ;; case foo(*bar)
+               ((looking-back "(")
+                (smart-operator-insert "*" 'middle))
+	       ;; case foo(bar, *bar)
+               ((looking-back ", *")
+                (smart-operator-insert "*" 'before))
                ((looking-back "= *")
                 (smart-operator-insert "*" 'before))
                (t
