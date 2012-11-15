@@ -18,5 +18,6 @@
 (require 'pemacs-editing)
 (require 'pemacs-completing)
 (require 'pemacs-vcs)
+(require 'pemacs-auxiliary)
 
 (provide 'pemacs-init)
