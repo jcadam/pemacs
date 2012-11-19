@@ -37,4 +37,43 @@
 (setq yas/prompt-functions '(yas/dropdown-prompt yas/ido-prompt yas/x-prompt))
 (setq yas/wrap-around-region 'cua)
 
+;;; Auto-inserting for templates
+(require 'autoinsert)
+(require 'cl)
+
+(setq auto-insert 'other)
+(setq auto-insert-query nil)
+
+(setq auto-insert-directory (concat pemacs-install-dir "data/templates/"))
+(setq auto-insert-alist
+      (append '(("\\.c$"   . ["template.c"   pemacs-template])
+		("\\.cpp$" . ["template.cpp" pemacs-template])
+		("\\.h$"   . ["template.h"   pemacs-template]))
+	      auto-insert-alist))
+
+(defvar pemacs-template-replacement-alists
+  '(("%file%"   . (lambda() (file-name-nondirectory (buffer-file-name))))
+    ("%file-without-ext%" . (lambda() (file-name-sans-extension
+				       (file-name-nondirectory (buffer-file-name)))))
+    ("%include-guard%" . (lambda() (format "__%s_H__"
+					   (upcase (file-name-sans-extension
+						    (file-name-nondirectory
+						     (buffer-file-name)))))))
+    ("%name%"   . user-full-name)
+    ("%mail%"   . (lambda() (identity user-mail-address)))
+    ("%cyear%"  . (lambda() (substring (current-time-string) -4)))))
+
+(defun pemacs-template ()
+  (time-stamp)
+  (mapc #'(lambda(c)
+	    (progn
+	      (goto-char (point-min))
+	      (replace-string (car c) (funcall (cdr c)) nil)))
+	pemacs-template-replacement-alists)
+  (goto-char (point-max))
+  (message "autoinsert done."))
+
+;; insert header for new files only
+(add-hook 'find-file-not-found-hooks 'auto-insert)
+
 (provide 'pemacs-completing)
