@@ -7,8 +7,8 @@
   (interactive)
   (if window-system
       (progn
-	;; Set default fonts to Monospace-10
-	(set-default-font "Monospace-10")
+	;; Set default fonts to profont-9
+	(set-default-font "profont-9")
 	
 	;; Japanese characters
 	(set-fontset-font (frame-parameter nil 'font)
