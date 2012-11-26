@@ -13,4 +13,7 @@
 (global-set-key [f10] 'flymake-goto-prev-error)
 (global-set-key [f11] 'flymake-goto-next-error)
 
+;; projects
+(require 'eproject)
+
 (provide 'pemacs-auxiliary)
