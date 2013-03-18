@@ -19,7 +19,7 @@
   (or window-system(menu-bar-mode 0))
   ;;(menu-bar-mode 0)
   ;;; No toolbar always
-  (or window-system (tool-bar-mode 0))
+  (tool-bar-mode 0)
   ;;; show paren
   (show-paren-mode 1)
   ;;; Yes to y, No to n
