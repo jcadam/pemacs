@@ -20,4 +20,7 @@
 (require 'pemacs-vcs)
 (require 'pemacs-auxiliary)
 
+;; for each major mode
+(require 'pemacs-cc-edit)
+
 (provide 'pemacs-init)
