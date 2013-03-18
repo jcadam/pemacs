@@ -7,8 +7,8 @@
   (interactive)
   (if window-system
       (progn
-	;; Set default fonts to profont-9
-	(set-default-font "profont-9")
+	;; Set default fonts to profont-12
+	(set-default-font "monospace-9")
 	
 	;; Japanese characters
 	(set-fontset-font (frame-parameter nil 'font)
@@ -39,6 +39,7 @@
              ;;(color-theme-fischmeister)
              ;; light theme
              (color-theme-jsc-light)
+	     ;;(color-theme-jsc-dark)
              )))))
 
 ;;; ======================================================================= ;;;
@@ -67,6 +68,6 @@
 (set-frame-size-according-to-resolution)
 
 ;; Fonts speedbar, ediff etc
-(add-to-list 'default-frame-alist '(font . "profont-9"))
+(add-to-list 'default-frame-alist '(font . "monospace-9"))
 
 (provide 'pemacs-apperance)
