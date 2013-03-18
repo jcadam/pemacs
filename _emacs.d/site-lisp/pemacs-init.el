@@ -22,5 +22,6 @@
 
 ;; for each major mode
 (require 'pemacs-cc-edit)
+(require 'pemacs-org-init)
 
 (provide 'pemacs-init)
