@@ -29,18 +29,12 @@
 ;;; ======================================================================= ;;;
 (defun set-color-theme ()
   (interactive)
-  (if window-system
-      (progn
-        (require 'color-theme)
+  (require 'color-theme)
         (eval-after-load "color-theme"
           '(progn
              (color-theme-initialize)
-             ;; dark theme
-             ;;(color-theme-fischmeister)
-             ;; light theme
-             (color-theme-jsc-light)
-	     ;;(color-theme-jsc-dark)
-             )))))
+	     (color-theme-billw)
+             )))
 
 ;;; ======================================================================= ;;;
 ;;; FRAMESIZE
