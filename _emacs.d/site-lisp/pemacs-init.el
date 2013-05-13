@@ -23,5 +23,6 @@
 ;; for each major mode
 (require 'pemacs-cc-edit)
 (require 'pemacs-org-init)
+(require 'pemacs-python-edit)
 
 (provide 'pemacs-init)
