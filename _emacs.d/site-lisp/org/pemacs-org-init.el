@@ -36,5 +36,11 @@
 ;;; wikimedia backend
 (require 'org-mw)
 
+;;; ditaa and dot
+(setq org-ditaa-jar-path
+      (expand-file-name
+       "~/.emacs.d/scripts/ditaa.jar"))
+(require 'org-exp-blocks)
+
 (provide 'pemacs-org-init)
 ;;; pemacs-org-init.el ends here
