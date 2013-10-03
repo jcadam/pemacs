@@ -44,15 +44,10 @@
 ;;; show tab as tab-mark
 (setq whitespace-style '(trailing tabs tab-mark))
 
-;;; Windows NT has some problems to display marks in putty, etc
-(if window-system
-    (progn
-      (add-hook 'c-mode-common-hook (lambda () (whitespace-mode)))
-      (add-hook 'java-mode-hook (lambda () (whitespace-mode)))
-      (add-hook 'python-mode-hook (lambda () (whitespace-mode)))
-      (add-hook 'makefile-mode-hook (lambda () (whitespace-mode)))
-      )
-  )
+(add-hook 'c-mode-common-hook (lambda () (whitespace-mode)))
+(add-hook 'java-mode-hook (lambda () (whitespace-mode)))
+(add-hook 'python-mode-hook (lambda () (whitespace-mode)))
+(add-hook 'makefile-mode-hook (lambda () (whitespace-mode)))
 
 ;;; Auto-complete
 (require 'auto-complete)
