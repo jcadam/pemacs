@@ -28,8 +28,9 @@
   (progn
     (define-trivial-mode "gv" "\\.ps$")
     (define-trivial-mode "evince" "\\.pdf$")
-    (define-trivial-mode "libreoffice" "\\.xls.*$")
-    (define-trivial-mode "libreoffice" "\\.doc.*$")
+    (define-trivial-mode "ooffice" "\\.xls.*$")
+    (define-trivial-mode "ooffice" "\\.doc.*$")
+    (define-trivial-mode "ooffice" "\\.ppt.*$")
     (define-trivial-mode "smplayer" "\\.[Mm][Pp].*$")
     (define-trivial-mode "smplayer" "\\.[Ww][Aa][Vv]$")
     )
