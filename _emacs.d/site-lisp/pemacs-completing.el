@@ -48,7 +48,8 @@
 (setq auto-insert-alist
       (append '(("\\.c$"   . ["template.c"   pemacs-template])
 		("\\.cpp$" . ["template.cpp" pemacs-template])
-		("\\.h$"   . ["template.h"   pemacs-template]))
+		("\\.h$"   . ["template.h"   pemacs-template])
+		("\\.hpp$" . ["template.hpp" pemacs-template]))
 	      auto-insert-alist))
 
 (defvar pemacs-template-replacement-alists

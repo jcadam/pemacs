@@ -67,6 +67,9 @@
 	     (concat pemacs-install-dir "data/ac-dict"))
 (ac-config-default)
 
+;;; Intend when RETURN
+(global-set-key (kbd "RET") 'newline-and-indent)
+
 ;;; Region/Line opertions
 ;;; This part worths a summary on all keybindings
 ;;;
