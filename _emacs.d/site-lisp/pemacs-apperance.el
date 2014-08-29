@@ -33,7 +33,7 @@
         (eval-after-load "color-theme"
           '(progn
              (color-theme-initialize)
-	     (color-theme-billw)
+	     (color-theme-jsc-light)
              )))
 
 ;;; ======================================================================= ;;;
