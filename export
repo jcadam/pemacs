@@ -5,6 +5,7 @@ git archive --format=tar --prefix=pemacs/ HEAD | gzip > /tmp/pemacs.tar.gz
 if [[ -a ${HOME}/.emacs ]]; then
 	mv ${HOME}/.emacs ${HOME}/_emacs.bak
 fi
+
 if [[ -a ${HOME}/.emacs.d ]]; then
 	mv ${HOME}/.emacs.d ${HOME}/_emacs.d.bak
 fi

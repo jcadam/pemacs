@@ -68,12 +68,7 @@
 (ac-config-default)
 
 ;;; Intend when RETURN
-(defun local-bind-RET (local-set-key (kdb "RET") 'newline-and-indent))
-(add-hook 'c-mode-common-hook 'local-bind-RET)
-(add-hook 'java-mode-hook 'local-bind-RET)
-(add-hook 'python-mode-hook 'local-bind-RET)
-(add-hook 'makefile-mode-hook 'local-bind-RET)
-(add-hook 'lisp-mode-hook 'local-bind-RET)
+(global-set-key (kbd "RET") 'newline-and-indent)
 
 ;;; Region/Line opertions
 ;;; This part worths a summary on all keybindings
