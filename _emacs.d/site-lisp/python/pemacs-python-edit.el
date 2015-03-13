@@ -30,6 +30,7 @@
 	     (setq-default tab-width 4)))
 
 ;;; flymake for python
+(require 'flymake)
 (defun pemacs-flymake-python-init ()
   (pemacs-flymake-generic-init
    "~/.emacs.d/scripts/python-style-checker.sh"))
