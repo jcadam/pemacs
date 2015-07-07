@@ -24,16 +24,27 @@
 
 ;;; Code:
 
-;; Add a user-defined indent style
-(c-add-style "pemacs"
-	     '("stroustrup"
-	       (c-basic-offset . 4)
-	       (c-offsets-alist
-		(innamespace . -)
-		(inline-open . 0)
-		(inher-cont . c-lineup-multi-inher)
-		(arglist-cont-nonempty . +)
-		(template-args-cont . +))))
+(require 'google-c-style)
+;; set google-c-style as default when cc-mode is open
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+
+;; set width of the line to 79 charactors
+(add-hook 'c-mode-common-hook
+	  '(lambda () (setq-default fill-column 79)))
+
+;; define caplab-c-style
+(defconst caplab-c-style
+  '("Google"
+    (c-basic-offset . 4)
+    (c-offsets-alist . (((innamespace . 0))))))
+(defun caplab-set-style ()
+  (c-add-style "caplab" caplab-c-style))
+(add-hook 'c++-mode-hook 'caplab-set-style)
+
+;; treat .h file as c++ source code
+;;(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 
 (provide 'pemacs-cc-edit)
 ;;; edit.el ends here
